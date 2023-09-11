@@ -9,6 +9,7 @@ public class Basket {
 
     private List<Product> products;
     private static final int BASKET_PRODUCT_COUNT_THRESHOLD = 3;
+    private static final int IDENTICAL_PRODUCT_COUNT_THRESHOLD = 3;
 
     public ShipmentSize getShipmentSize() {
 
@@ -48,7 +49,7 @@ public class Basket {
                 .collect(Collectors.groupingBy(Product::getSize, Collectors.counting()))
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getValue() >= 3)
+                .filter(entry -> entry.getValue() >= IDENTICAL_PRODUCT_COUNT_THRESHOLD)
                 .map(Map.Entry::getKey)
                 .findFirst();
 
@@ -58,4 +59,5 @@ public class Basket {
 
         return getMaxProductSize();
     }
+
 }
