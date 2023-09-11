@@ -8,7 +8,28 @@ import java.util.stream.Collectors;
 public class Basket {
 
     private List<Product> products;
-    private static final int threshold = 3;
+    private static final int BASKET_PRODUCT_COUNT_THRESHOLD = 3;
+
+    public ShipmentSize getShipmentSize() {
+
+        if(products.isEmpty()){
+            return null;
+        }
+        if(products.size() >= BASKET_PRODUCT_COUNT_THRESHOLD){
+            return processMoreThanOrEqualToThresholdBasket();
+        }
+        else {
+            return getMaxProductSize();
+        }
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 
     private ShipmentSize getMaxProductSize(){
         int maxProductSize = 0;
@@ -24,43 +45,17 @@ public class Basket {
     private ShipmentSize processMoreThanOrEqualToThresholdBasket() {
 
         Optional<ShipmentSize> moreThanThresholdProductSize = products.stream()
-            .collect(Collectors.groupingBy(Product::getSize, Collectors.counting()))
-            .entrySet()
-            .stream()
-            .filter(entry -> entry.getValue() >= 3)
-            .map(Map.Entry::getKey)
-            .findFirst();
+                .collect(Collectors.groupingBy(Product::getSize, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue() >= 3)
+                .map(Map.Entry::getKey)
+                .findFirst();
 
         if(moreThanThresholdProductSize.isPresent()){
             return moreThanThresholdProductSize.get().getNextSize();
         }
 
         return getMaxProductSize();
-    }
-
-    private ShipmentSize processLessThanThresholdBasket(){
-        return getMaxProductSize();
-    }
-
-    public ShipmentSize getShipmentSize() {
-
-        if(products.isEmpty()){
-            return null;
-        }
-
-        if(products.size() >= threshold){
-            return processMoreThanOrEqualToThresholdBasket();
-        }
-        else {
-            return processLessThanThresholdBasket();
-        }
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
     }
 }
