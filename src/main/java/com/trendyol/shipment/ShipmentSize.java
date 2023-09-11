@@ -11,8 +11,9 @@ public enum ShipmentSize {
         int ordinal = this.ordinal();
         if (ordinal < ShipmentSize.values().length - 1) {
             return ShipmentSize.values()[ordinal + 1];
-        } else {
-            return this; // Return itself if it's the largest enum
+        }
+        else {
+            return this; // returns itself if it's the largest size
         }
     }
 }
